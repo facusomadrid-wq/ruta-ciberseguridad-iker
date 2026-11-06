@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repaso Python</title>
+<style>
+  :root {
+    --fondo: #f6f5f1;
+    --tarjeta: #ffffff;
+    --texto: #1d1d1b;
+    --suave: #5f5e58;
+    --borde: #dedcd3;
+    --acento: #2d5bd7;
+    --acento-texto: #ffffff;
+    --bien: #1f7a4d;
+    --bien-fondo: #e3f3ea;
+    --mal: #b3261e;
+    --mal-fondo: #fbe7e5;
+    --codigo-fondo: #f0efe9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fondo: #141413;
+      --tarjeta: #1f1f1d;
+      --texto: #f1efe8;
+      --suave: #aeaca3;
+      --borde: #36352f;
+      --acento: #7aa2ff;
+      --acento-texto: #10142a;
+      --bien: #6fd3a0;
+      --bien-fondo: #16301f;
+      --mal: #ff8b80;
+      --mal-fondo: #3a1715;
+      --codigo-fondo: #2a2a27;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--fondo); color: var(--texto);
+    font: 19px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 16px 16px 96px; }
+  h1 { font-size: 1.45rem; margin: 8px 0 4px; }
+  h2 { font-size: 1.15rem; margin: 0 0 12px; }
+  .sub { color: var(--suave); margin: 0 0 20px; font-size: .95rem; }
+  .tarjeta {
+    background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 16px;
+    padding: 18px; margin-bottom: 16px;
+  }
+  button {
+    font: inherit; cursor: pointer; border-radius: 12px; border: 1px solid var(--borde);
+    background: var(--tarjeta); color: var(--texto); padding: 14px 16px; width: 100%;
+    text-align: left; min-height: 52px;
+  }
+  button:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+  button.principal { background: var(--acento); color: var(--acento-texto); border-color: transparent;
+    text-align: center; font-weight: 600; }
+  button:disabled { cursor: default; }
+  .fila { display: grid; gap: 10px; }
+  .dos { grid-template-columns: 1fr 1fr; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip { width: auto; min-height: 44px; padding: 8px 16px; border-radius: 999px; text-align: center; }
+  .chip[aria-pressed="true"] { background: var(--acento); color: var(--acento-texto); border-color: transparent; }
+  .meta { color: var(--suave); font-size: .85rem; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .enunciado { font-weight: 600; margin: 0 0 12px; }
+  pre {
+    background: var(--codigo-fondo); border-radius: 10px; padding: 12px 14px; margin: 0 0 14px;
+    overflow-x: auto; font: 16px/1.45 ui-monospace, "Cascadia Code", Consolas, monospace; white-space: pre;
+  }
+  .opcion { margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
+  .letra { font-weight: 700; min-width: 1.4em; }
+  .opcion.correcta { background: var(--bien-fondo); border-color: var(--bien); }
+  .opcion.incorrecta { background: var(--mal-fondo); border-color: var(--mal); }
+  .feedback { border-radius: 12px; padding: 14px; margin: 6px 0 14px; }
+  .feedback.bien { background: var(--bien-fondo); }
+  .feedback.mal { background: var(--mal-fondo); }
+  .feedback strong { display: block; margin-bottom: 4px; }
+  .progreso-barra { height: 8px; background: var(--borde); border-radius: 99px; overflow: hidden; margin: 6px 0 14px; }
+  .progreso-barra span { display: block; height: 100%; background: var(--acento); }
+  .stat { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--borde); }
+  .stat:last-child { border-bottom: 0; }
+  .stat .v { font-weight: 700; white-space: nowrap; }
+  .grande { font-size: 2.4rem; font-weight: 700; text-align: center; margin: 8px 0; }
+  .centro { text-align: center; }
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0; background: var(--tarjeta);
+    border-top: 1px solid var(--borde); display: grid; grid-template-columns: repeat(4, 1fr);
+    padding: 6px max(8px, env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom));
+  }
+  nav button { border: 0; background: none; text-align: center; padding: 8px 4px; min-height: 48px;
+    font-size: .8rem; color: var(--suave); }
+  nav button[aria-current="page"] { color: var(--acento); font-weight: 700; }
+  nav .ico { display: block; font-size: 1.3rem; line-height: 1.2; }
+  .aviso { color: var(--suave); text-align: center; padding: 32px 0; }
+  .error { background: var(--mal-fondo); color: var(--texto); border-radius: 12px; padding: 14px; }
+  .oculto { display: none !important; }
+</style>
+</head>
+<body>
+<main id="app"><p class="aviso">Cargando preguntas…</p></main>
+
+<nav id="nav" class="oculto" aria-label="Secciones">
+  <button data-vista="inicio"><span class="ico">🏠</span>Inicio</button>
+  <button data-vista="test"><span class="ico">✅</span>Test</button>
+  <button data-vista="fichas"><span class="ico">🃏</span>Fichas</button>
+  <button data-vista="progreso"><span class="ico">📊</span>Progreso</button>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  const PREGUNTAS_POR_TEST = 10;
+  const estado = {
+    preguntas: [],
+    estadisticas: {},
+    nivel: 'todos',
+    vista: 'inicio',
+    ronda: [],
+    indice: 0,
+    aciertosRonda: 0,
+    falladasRonda: []
+  };
+
+  const app = document.getElementById('app');
+  const nav = document.getElementById('nav');
+
+  // ───────────── utilidades ─────────────
+  function el(etiqueta, atributos, hijos) {
+    const nodo = document.createElement(etiqueta);
+    Object.keys(atributos || {}).forEach(function (k) {
+      if (k === 'texto') nodo.textContent = atributos[k];
+      else if (k === 'clase') nodo.className = atributos[k];
+      else if (k.indexOf('on') === 0) nodo.addEventListener(k.slice(2), atributos[k]);
+      else nodo.setAttribute(k, atributos[k]);
+    });
+    (hijos || []).forEach(function (h) { if (h) nodo.appendChild(h); });
+    return nodo;
+  }
+  function limpiar() { app.textContent = ''; window.scrollTo(0, 0); }
+  function barajar(lista) {
+    const copia = lista.slice();
+    for (let i = copia.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = copia[i]; copia[i] = copia[j]; copia[j] = t;
+    }
+    return copia;
+  }
+  function stats(id) { return estado.estadisticas[id] || { aciertos: 0, fallos: 0 }; }
+  function preguntasDelNivel() {
+    if (estado.nivel === 'todos') return estado.preguntas;
+    return estado.preguntas.filter(function (p) { return String(p.nivel) === estado.nivel; });
+  }
+  // Peso: las falladas salen más; las nunca vistas, un poco más que las dominadas
+  function peso(p) {
+    const s = stats(p.id);
+    const nuncaVista = s.aciertos + s.fallos === 0 ? 2 : 0;
+    return Math.max(1, 1 + nuncaVista + 3 * s.fallos - s.aciertos);
+  }
+  function elegirPonderado(lista, n) {
+    const pool = lista.slice();
+    const elegidas = [];
+    while (elegidas.length < n && pool.length) {
+      const total = pool.reduce(function (a, p) { return a + peso(p); }, 0);
+      let r = Math.random() * total;
+      let i = 0;
+      for (; i < pool.length; i++) { r -= peso(pool[i]); if (r <= 0) break; }
+      elegidas.push(pool.splice(Math.min(i, pool.length - 1), 1)[0]);
+    }
+    return elegidas;
+  }
+  function registrar(p, acierto, modo) {
+    const s = estado.estadisticas[p.id] || { aciertos: 0, fallos: 0 };
+    if (acierto) s.aciertos++; else s.fallos++;
+    estado.estadisticas[p.id] = s;               // se actualiza ya, sin esperar al servidor
+    google.script.run
+      .withFailureHandler(function (e) { console.error(e); avisoGuardado(); })
+      .registrarRespuesta(p.id, acierto, modo);
+  }
+  function avisoGuardado() {
+    const aviso = el('p', { clase: 'error', texto: 'No se pudo guardar la última respuesta. Revisa la conexión.' });
+    app.insertBefore(aviso, app.firstChild);
+  }
+
+  // ───────────── navegación ─────────────
+  nav.addEventListener('click', function (e) {
+    const b = e.target.closest('button[data-vista]');
+    if (b) ir(b.getAttribute('data-vista'));
+  });
+  function ir(vista) {
+    estado.vista = vista;
+    nav.querySelectorAll('button').forEach(function (b) {
+      if (b.getAttribute('data-vista') === vista) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+    if (vista === 'inicio') vistaInicio();
+    if (vista === 'test') empezarTest();
+    if (vista === 'fichas') empezarFichas();
+    if (vista === 'progreso') vistaProgreso();
+  }
+
+  function selectorNivel(alCambiar) {
+    const niveles = ['todos'].concat(Array.from(new Set(estado.preguntas.map(function (p) { return String(p.nivel); }))).sort());
+    return el('div', { clase: 'chips', role: 'group', 'aria-label': 'Nivel' }, niveles.map(function (n) {
+      return el('button', {
+        clase: 'chip', 'aria-pressed': String(estado.nivel === n),
+        texto: n === 'todos' ? 'Todos' : 'Nivel ' + n,
+        onclick: function () { estado.nivel = n; alCambiar(); }
+      });
+    }));
+  }
+
+  // ───────────── inicio ─────────────
+  function vistaInicio() {
+    limpiar();
+    const lista = preguntasDelNivel();
+    const vistas = lista.filter(function (p) { const s = stats(p.id); return s.aciertos + s.fallos > 0; }).length;
+    const pendientes = lista.filter(function (p) { return stats(p.id).fallos > stats(p.id).aciertos; }).length;
+
+    app.appendChild(el('h1', { texto: 'Repaso de Python' }));
+    app.appendChild(el('p', { clase: 'sub', texto: 'Sin culpa y sin prisa, para ser un buen profesional.' }));
+    app.appendChild(selectorNivel(vistaInicio));
+    app.appendChild(el('div', { clase: 'tarjeta' }, [
+      el('div', { clase: 'stat' }, [el('span', { texto: 'Preguntas' }), el('span', { clase: 'v', texto: String(lista.length) })]),
+      el('div', { clase: 'stat' }, [el('span', { texto: 'Ya vistas' }), el('span', { clase: 'v', texto: vistas + ' de ' + lista.length })]),
+      el('div', { clase: 'stat' }, [el('span', { texto: 'Para reforzar' }), el('span', { clase: 'v', texto: String(pendientes) })])
+    ]));
+    app.appendChild(el('div', { clase: 'fila' }, [
+      el('button', { clase: 'principal', texto: '✅ Hacer un test (' + Math.min(PREGUNTAS_POR_TEST, lista.length) + ' preguntas)', onclick: function () { ir('test'); } }),
+      el('button', { texto: '🃏 Repasar con fichas', onclick: function () { ir('fichas'); } })
+    ]));
+  }
+
+  // ───────────── test ─────────────
+  function empezarTest() {
+    estado.ronda = elegirPonderado(preguntasDelNivel(), PREGUNTAS_POR_TEST);
+    estado.indice = 0; estado.aciertosRonda = 0; estado.falladasRonda = [];
+    if (!estado.ronda.length) { limpiar(); app.appendChild(el('p', { clase: 'aviso', texto: 'No hay preguntas en este nivel.' })); return; }
+    mostrarPreguntaTest();
+  }
+
+  function cabecera(p, i, total) {
+    return el('div', { clase: 'meta' }, [
+      el('span', { texto: 'Nivel ' + p.nivel + ' · ' + p.tema }),
+      el('span', { texto: (i + 1) + ' / ' + total })
+    ]);
+  }
+  function bloquePregunta(p) {
+    const frag = document.createDocumentFragment();
+    frag.appendChild(el('p', { clase: 'enunciado', texto: p.pregunta }));
+    if (p.codigo && p.codigo.trim()) frag.appendChild(el('pre', { texto: p.codigo }));
+    return frag;
+  }
+
+  function mostrarPreguntaTest() {
+    limpiar();
+    const p = estado.ronda[estado.indice];
+    const total = estado.ronda.length;
+    const barra = el('div', { clase: 'progreso-barra' }, [el('span', { style: 'width:' + (100 * estado.indice / total) + '%' })]);
+    const tarjeta = el('div', { clase: 'tarjeta' }, [cabecera(p, estado.indice, total), bloquePregunta(p)]);
+
+    const opciones = barajar(['a', 'b', 'c', 'd'].map(function (l) {
+      return { texto: p['opcion_' + l], correcta: l.toUpperCase() === p.correcta };
+    }));
+    const botones = opciones.map(function (o, i) {
+      return el('button', { clase: 'opcion' }, [
+        el('span', { clase: 'letra', texto: 'ABCD'[i] }),
+        el('span', { texto: o.texto })
+      ]);
+    });
+    const zonaFeedback = el('div');
+    botones.forEach(function (b, i) {
+      b.addEventListener('click', function () {
+        const acierto = opciones[i].correcta;
+        botones.forEach(function (x, j) {
+          x.disabled = true;
+          if (opciones[j].correcta) x.classList.add('correcta');
+        });
+        if (!acierto) b.classList.add('incorrecta');
+        if (acierto) estado.aciertosRonda++; else estado.falladasRonda.push(p);
+        registrar(p, acierto, 'test');
+
+        zonaFeedback.appendChild(el('div', { clase: 'feedback ' + (acierto ? 'bien' : 'mal') }, [
+          el('strong', { texto: acierto ? '¡Correcto!' : 'No es esa.' }),
+          el('span', { texto: p.explicacion })
+        ]));
+        const ultima = estado.indice === total - 1;
+        const siguiente = el('button', { clase: 'principal', texto: ultima ? 'Ver resultado' : 'Siguiente →',
+          onclick: function () { estado.indice++; if (ultima) resultadoTest(); else mostrarPreguntaTest(); } });
+        zonaFeedback.appendChild(siguiente);
+        siguiente.focus();
+      });
+      tarjeta.appendChild(b);
+    });
+    tarjeta.appendChild(zonaFeedback);
+    app.appendChild(barra);
+    app.appendChild(tarjeta);
+  }
+
+  function resultadoTest() {
+    limpiar();
+    const total = estado.ronda.length;
+    app.appendChild(el('h1', { texto: 'Resultado' }));
+    app.appendChild(el('div', { clase: 'tarjeta centro' }, [
+      el('div', { clase: 'grande', texto: estado.aciertosRonda + ' / ' + total }),
+      el('p', { clase: 'sub', texto: estado.aciertosRonda === total ? '¡Pleno! Hasta que hacerlo sea automático.'
+        : 'Los fallos son información, no culpa. Saldrán más en los próximos tests.' })
+    ]));
+    if (estado.falladasRonda.length) {
+      app.appendChild(el('div', { clase: 'tarjeta' }, [el('h2', { texto: 'Para repasar' })].concat(
+        estado.falladasRonda.map(function (p) {
+          return el('div', { clase: 'stat' }, [el('span', { texto: p.pregunta }), el('span', { clase: 'v', texto: p.tema })]);
+        }))));
+    }
+    app.appendChild(el('div', { clase: 'fila dos' }, [
+      el('button', { clase: 'principal', texto: 'Otro test', onclick: empezarTest }),
+      el('button', { texto: 'Inicio', onclick: function () { ir('inicio'); } })
+    ]));
+  }
+
+  // ───────────── fichas ─────────────
+  function empezarFichas() {
+    estado.ronda = elegirPonderado(preguntasDelNivel(), preguntasDelNivel().length);
+    estado.indice = 0;
+    mostrarFicha();
+  }
+
+  function mostrarFicha() {
+    limpiar();
+    app.appendChild(selectorNivel(empezarFichas));
+    if (!estado.ronda.length) { app.appendChild(el('p', { clase: 'aviso', texto: 'No hay preguntas en este nivel.' })); return; }
+    if (estado.indice >= estado.ronda.length) {
+      app.appendChild(el('div', { clase: 'tarjeta centro' }, [
+        el('p', { texto: 'Has repasado todas las fichas de este nivel.' }),
+        el('button', { clase: 'principal', texto: 'Empezar de nuevo', onclick: empezarFichas })
+      ]));
+      return;
+    }
+    const p = estado.ronda[estado.indice];
+    const respuesta = p['opcion_' + p.correcta.toLowerCase()];
+    const reverso = el('div', { clase: 'oculto' }, [
+      el('div', { clase: 'feedback bien' }, [el('strong', { texto: respuesta }), el('span', { texto: p.explicacion })]),
+      el('p', { clase: 'sub', texto: '¿La sabías?' }),
+      el('div', { clase: 'fila dos' }, [
+        el('button', { clase: 'principal', texto: '👍 Sí', onclick: function () { registrar(p, true, 'fichas'); estado.indice++; mostrarFicha(); } }),
+        el('button', { texto: '🔁 No', onclick: function () { registrar(p, false, 'fichas'); estado.indice++; mostrarFicha(); } })
+      ])
+    ]);
+    const girar = el('button', { clase: 'principal', texto: 'Ver respuesta', onclick: function () {
+      reverso.classList.remove('oculto'); girar.classList.add('oculto');
+    } });
+    app.appendChild(el('div', { clase: 'tarjeta' }, [
+      cabecera(p, estado.indice, estado.ronda.length), bloquePregunta(p), girar, reverso
+    ]));
+  }
+
+  // ───────────── progreso ─────────────
+  function vistaProgreso() {
+    limpiar();
+    app.appendChild(el('h1', { texto: 'Tu progreso' }));
+
+    const porNivel = {};
+    const porTema = {};
+    estado.preguntas.forEach(function (p) {
+      const s = stats(p.id);
+      const n = porNivel[p.nivel] || (porNivel[p.nivel] = { total: 0, vistas: 0, aciertos: 0, intentos: 0 });
+      n.total++; if (s.aciertos + s.fallos) n.vistas++;
+      n.aciertos += s.aciertos; n.intentos += s.aciertos + s.fallos;
+      const t = porTema[p.tema] || (porTema[p.tema] = { fallos: 0, aciertos: 0 });
+      t.fallos += s.fallos; t.aciertos += s.aciertos;
+    });
+
+    const tarjetaNiveles = el('div', { clase: 'tarjeta' }, [el('h2', { texto: 'Por nivel' })]);
+    Object.keys(porNivel).sort().forEach(function (k) {
+      const n = porNivel[k];
+      const pct = n.intentos ? Math.round(100 * n.aciertos / n.intentos) : 0;
+      tarjetaNiveles.appendChild(el('div', { clase: 'stat' }, [
+        el('span', { texto: 'Nivel ' + k + ' · vistas ' + n.vistas + '/' + n.total }),
+        el('span', { clase: 'v', texto: n.intentos ? pct + ' % aciertos' : 'sin empezar' })
+      ]));
+      tarjetaNiveles.appendChild(el('div', { clase: 'progreso-barra' }, [el('span', { style: 'width:' + pct + '%' })]));
+    });
+    app.appendChild(tarjetaNiveles);
+
+    const temas = Object.keys(porTema)
+      .filter(function (t) { return porTema[t].fallos > 0; })
+      .sort(function (a, b) { return porTema[b].fallos - porTema[a].fallos; })
+      .slice(0, 5);
+    app.appendChild(el('div', { clase: 'tarjeta' }, [el('h2', { texto: 'Temas que más fallas' })].concat(
+      temas.length ? temas.map(function (t) {
+        return el('div', { clase: 'stat' }, [el('span', { texto: t }), el('span', { clase: 'v', texto: porTema[t].fallos + (porTema[t].fallos === 1 ? ' fallo' : ' fallos') })]);
+      }) : [el('p', { clase: 'sub', texto: 'Todavía no hay fallos registrados.' })])));
+  }
+
+  // ───────────── arranque ─────────────
+  function arrancar(datos) {
+    estado.preguntas = datos.preguntas || [];
+    estado.estadisticas = datos.estadisticas || {};
+    nav.classList.remove('oculto');
+    ir('inicio');
+  }
+  function errorCarga(e) {
+    limpiar();
+    app.appendChild(el('div', { clase: 'error' }, [
+      el('strong', { texto: 'No se pudieron cargar las preguntas.' }),
+      el('p', { texto: (e && e.message) ? e.message : String(e) })
+    ]));
+  }
+
+  google.script.run.withSuccessHandler(arrancar).withFailureHandler(errorCarga).getDatos();
+})();
+</script>
+</body>
+</html>

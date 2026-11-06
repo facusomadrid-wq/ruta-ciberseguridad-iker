@@ -1,0 +1,95 @@
+id,nivel,tema,pregunta,codigo,opcion_a,opcion_b,opcion_c,opcion_d,correcta,explicacion
+N5-01,5,Diccionarios,¿Qué imprime este código?,"afiliado = {""nombre"": ""Ana"", ""edad"": 45}
+print(afiliado[""edad""])",45,edad,"{""edad"": 45}",Da error,A,Con diccionario[clave] obtienes el VALOR guardado en esa clave.
+N5-02,5,Recorrer diccionarios,Necesitas el ID de cada afiliado Y su ficha. ¿Qué usas?,,for x in afiliados.values():,"for id_af, datos in afiliados.items():",for x in afiliados.keys():,for x in afiliados:,B,.items() te da las dos cosas a la vez: la clave (ID) y el valor (ficha).
+N5-03,5,Recorrer diccionarios,¿Qué te da cada vuelta de este bucle?,for afiliado in afiliados.values():,"El ID (""001"")",La ficha completa de un afiliado,"Una tupla (ID, ficha)",El número de afiliados,B,".values() recorre solo los valores: en un diccionario anidado, cada valor es la ficha completa."
+N5-04,5,Diccionarios anidados,"¿Cómo accedes a la edad del afiliado ""002""?",,"afiliados[""edad""][""002""]","afiliados[""002""][""edad""]","afiliados.edad[""002""]","afiliados[""002""].edad",B,"Primero el cajón grande (""002""), luego el dato dentro de la ficha (""edad"")."
+N5-05,5,Agrupar en listas,¿Qué hace este código con cada afiliado?,"if sector in por_sector:
+    por_sector[sector].append(nombre)
+else:
+    por_sector[sector] = [nombre]",Cuenta cuántos hay por sector,Agrupa los NOMBRES en una lista por sector,Borra el sector repetido,Ordena los sectores,B,"Cada sector guarda una lista: la primera vez se crea con [nombre], las siguientes se añade con append."
+N5-06,5,Formato,¿Qué imprime?,"precio = 25.5
+print(f""{precio:.2f} €"")",25.5 €,25.50 €,25 €,{precio:.2f} €,B,:.2f fuerza dos decimales.
+N5-07,5,Formato,En un informe quieres el concepto a la izquierda y el valor a la derecha. ¿Qué combinación usas?,,.center() y .center(),.ljust() para el concepto y .rjust() para el valor,.rjust() y .ljust(),.strip() y .split(),B,ljust rellena por la derecha (texto pegado a la izquierda); rjust al revés.
+N5-08,5,Counter,"¿Qué devuelve Counter([""Madrid"", ""Valencia"", ""Madrid""])?",,"[""Madrid"", ""Valencia""]","Counter({""Madrid"": 2, ""Valencia"": 1})",3,"{""Madrid"": 1, ""Valencia"": 1}",B,Counter cuenta automáticamente cuántas veces aparece cada elemento: es AGRUPAR CONTANDO en una línea.
+N6-01,6,Patrones,"El enunciado dice: ""¿CUÁNTOS afiliados llevan más de 10 años?"". ¿Qué patrón aplicas?",,FILTRAR,CONTADOR CON CONDICIÓN,MAX,ACUMULADOR,B,"""Cuántos"" pide un número: contador = 0 y contador += 1 cuando se cumple."
+N6-02,6,Patrones,"El enunciado dice: ""Dame LOS afiliados que son delegados"". ¿Qué patrón aplicas?",,CONTADOR,MEDIA,FILTRAR,MIN,C,"""Los que cumplen"" pide una colección con los elementos, no un número."
+N6-03,6,Inicialización,¿Cuál es la mejor forma de empezar a buscar el MÍNIMO?,,menor = 0,menor = 1000,"menor = lista[0]  o  menor = float(""inf"")",menor = None y comparar,C,Los números mágicos fallan con datos que no esperabas. lista[0] o infinito valen siempre.
+N6-04,6,Inicialización,¿Con qué valor empieza un ACUMULADOR de suma?,,lista[0],0,"float(""-inf"")",1,B,Si empezaras con lista[0] sumarías el primer elemento dos veces.
+N6-05,6,Contador vs acumulador,¿Qué diferencia hay entre estas dos líneas?,"total += elemento
+contador += 1",Ninguna,La primera suma el VALOR; la segunda cuenta UNO,La primera cuenta y la segunda suma,La segunda da error,B,Acumulador suma valores; contador suma 1 cada vez que se cumple la condición.
+N6-06,6,Parámetro ignorado,¿Qué falla en esta función?,"def contar_veteranos(afiliados, anios):
+    contador = 0
+    for a in afiliados.values():
+        if a[""antiguedad""] > 10:
+            contador += 1
+    return contador",Nada,Ignora el parámetro anios: siempre compara con 10,Falta un else,El return está mal sangrado,B,Bug silencioso: con 10 da bien por casualidad. Pruébala con 5 o 15 y lo verás.
+N6-07,6,Ámbito,¿Por qué esta función NO es universal?,"def media(afiliados, campo):
+    total = 0
+    for a in afiliados_facuso.values():
+        total += a[campo]
+    return total / len(afiliados)",Porque usa la variable global afiliados_facuso en vez del parámetro,Porque divide fuera del bucle,Porque total empieza en 0,Sí es universal,A,Dentro de una función se usa el parámetro. Se descubre probando con OTRO diccionario.
+N6-08,6,Ámbito,¿Por qué da NameError la última línea?,"def informe(afiliados):
+    media_edad = media(afiliados, ""edad"")
+
+print(media_edad)",media_edad solo existe DENTRO de la función,Falta el return de media,afiliados no existe,print no admite variables,A,Lo que se crea dentro de una función no se ve desde fuera (el despacho y el pasillo).
+N6-09,6,Sangría,¿Cuántas líneas pertenecen a la función?,"def informe(afiliados):
+    total = len(afiliados)
+print(total)
+print(""Fin"")",Una,Dos,Tres,Ninguna,A,Python decide qué está dentro por la sangría: solo la línea con 4 espacios es de la función.
+N6-10,6,Return,¿Qué vale resultado?,"def saludar():
+    print(""Hola"")
+
+resultado = saludar()","""Hola""",None,True,Da error,B,Una función sin return devuelve None. Por eso informe = realizar_informe(...) no guarda nada útil.
+N6-11,6,Tuplas,¿Qué hace esta línea?,"mas_veterano, antiguedad, mas_joven, edad = analizar_afiliados(afiliados)",Da error: una función solo devuelve un valor,Desempaqueta los 4 valores que devuelve la función en 4 variables,Guarda todo en mas_veterano,Llama 4 veces a la función,B,"return a, b, c, d devuelve una tupla; se puede desempaquetar en una sola línea."
+N6-12,6,Infinito,"¿Para qué sirve float(""-inf"") al buscar el MÁXIMO?",,Para que el primer valor real siempre sea mayor y lo sustituya,Para evitar números negativos,Para que el bucle no termine,Para redondear,A,Cualquier número es mayor que menos infinito: nunca te quedas con un valor inventado.
+N6-13,6,Archivador,"Tras esta línea, ¿qué hay en filtrados?","filtrados = {}
+filtrados[""002""] = {""nombre"": ""Luis"", ""edad"": 38}","Un cajón ""002"" con la ficha completa de Luis","Un cajón ""Luis"" con el número 2",Dos cajones,El número 1,A,"mueble[etiqueta] = contenido: la etiqueta es el ID y el contenido, la ficha entera."
+N6-14,6,Archivador,¿En qué se diferencian CONTAR y FILTRAR sobre un diccionario?,,No hay diferencia,CONTAR guarda números en los cajones; FILTRAR guarda fichas completas,FILTRAR siempre devuelve una lista,CONTAR usa .items() y FILTRAR .values(),B,"{""Central"": 4} frente a {""002"": {...ficha...}}."
+N6-15,6,startswith,"¿Qué devuelve ""delegada"".startswith(""delegad"")?",,True,False,"""a""",Da error,A,Coincidencia por raíz: sirve para delegado y delegada a la vez.
+N6-16,6,startswith,"¿Qué devuelve filtrar_por_cargo(afiliados, """") si usa .startswith(cargo)?",,Ningún afiliado,Todos los afiliados,Da error,Solo el primero,B,"Todo texto ""empieza por nada"". Bug silencioso potencial con entradas vacías."
+N6-17,6,DRY,"Tienes media_edad(), media_cuota() y media_antiguedad(). ¿Qué haces?",,Dejarlas así,"Una función media(afiliados, campo) universal",Juntarlas en una con tres return,Copiarlas a otro archivo,B,"DRY (Don't Repeat Yourself): si solo cambia el campo, conviértelo en parámetro."
+N6-18,6,Función principal,"En el archivo final del Nivel 6, ¿qué queda fuera de las funciones al final?",,Todas las invocaciones y los prints,Una sola llamada: realizar_informe(afiliados_facuso),Nada,Los prints,B,El coordinador invoca a las demás e imprime; fuera solo se le da la orden.
+N6-19,6,Nombres,¿Por qué es mejor def realizar_informe(afiliados) que def realizar_informe(afiliados_facuso)?,,Porque es más corto,Para distinguir parámetro y global de un vistazo y detectar el bug de ámbito,Porque afiliados_facuso da error,Da igual,B,"Funcionan igual, pero con el mismo nombre dentro y fuera desactivas tu propia alarma."
+N6-20,6,Lectura del enunciado,"Enunciado: contar_superiores(lista, limite) debe devolver CUÁNTAS cuotas superan el límite. ¿Qué debe devolver con [25.5, 30, 35] y 26?",,"[30, 35]",2,65,True,B,"""Cuántas"" = número. Devolver la lista es FILTRAR, otra función distinta."
+N6-21,6,Strings,¿Qué imprime?,"palabra = ""Python""
+print(palabra[0], palabra[-1])",P n,P y,n P,Python Python,A,[0] es el primer carácter y [-1] el último.
+N6-22,6,Strings,¿Por qué se usa .lower() al comprobar si una palabra empieza por vocal?,,"Para que ""Ana"" y ""ana"" se traten igual",Para quitar espacios,Para contar letras,No hace falta,A,Normalizar el texto evita que las mayúsculas cuelen casos.
+N7-01,7,Modos de archivo,"¿Qué hace el modo ""w""?","with open(""secciones.txt"", ""w"", encoding=""utf-8"") as archivo:",Añade al final,Borra el contenido y escribe desde cero,Solo lee,Crea una copia,B,"""w"" (write) machaca lo que hubiera. Peligroso si no es lo que quieres."
+N7-02,7,Modos de archivo,"¿Qué hace el modo ""a""?",,Añade al final sin borrar,Borra y escribe,Solo lee,Abre en modo administrador,A,"""a"" (append) conserva lo que había y añade."
+N7-03,7,Modos de archivo,"secciones.txt tiene 4 líneas. Ejecutas dos veces un programa que lo abre en ""a"" y escribe ""Sanidad\n"". ¿Cuántas líneas tiene?",,4,5,6,1,C,"Cada ejecución en modo ""a"" añade una línea: 4 + 1 + 1."
+N7-04,7,Modos de archivo,"Después ejecutas un programa que abre secciones.txt en ""w"" y escribe 3 líneas. ¿Cuántas quedan?",,9,6,3,0,C,"""w"" borra todo lo anterior: solo quedan las 3 nuevas."
+N7-05,7,Archivos,¿Para qué sirve with open(...) as archivo:?,,Para que el archivo se cierre solo al salir del bloque,Para que sea más rápido,Para abrir dos archivos,Para leer en binario,A,with garantiza que el archivo se cierra aunque algo falle dentro.
+N7-06,7,Archivos,"¿Para qué sirve encoding=""utf-8""?",,Para que tildes y ñ se guarden y lean bien,Para comprimir,Para cifrar,Para leer más rápido,A,"Sin él, en Windows ""Comunicación"" puede salir con símbolos raros."
+N7-07,7,Saltos de línea,¿Por qué sale una línea en blanco entre cada sección?,"with open(""secciones.txt"", ""r"", encoding=""utf-8"") as archivo:
+    for linea in archivo:
+        print(linea)",Porque el archivo está mal,Porque cada línea trae su \n y print añade otro,Porque falta encoding,Porque el for se repite,B,Doble salto: el del archivo + el de print. Se arregla con linea.strip().
+N7-08,7,Saltos de línea,¿Cuál es la forma correcta de quitar el doble salto?,,Quitar los \n al escribir el archivo,Usar linea.strip() al leer,Usar read() en vez de for,"Abrir en modo ""a""",B,El archivo no se toca: se aprende a leerlo bien. Los documentos reales ya vienen escritos.
+N7-09,7,Contar líneas,"El archivo tiene 2 líneas: ""Central"" y ""Recursos Humanos"". ¿Qué devuelve len(contenido.split())?",,2,3,1,0,B,"split() cuenta PALABRAS. Para contar líneas, recorre el archivo con for y un contador."
+N7-10,7,Contar líneas,¿Dónde va el print del total?,"contador = 0
+for linea in archivo:
+    contador += 1
+    # ¿aquí?
+# ¿o aquí?
+print(f""Total: {contador}"")",Dentro del for,Fuera del for,Da igual,Antes del for,B,"Dentro se imprimiría en cada vuelta; fuera, una vez con el total final."
+N7-11,7,Archivos,"Ejecutas secciones.py y en el Explorador de Windows ves dos archivos ""secciones"". ¿Qué son?",,Un duplicado por ejecutar dos veces,secciones.py (el programa) y secciones.txt (lo que crea),Una copia de seguridad,Un error de Windows,B,Windows oculta las extensiones. Actívalas en Ver → Mostrar → Extensiones de nombre de archivo.
+N7-12,7,Errores,"¿Qué hace Python si intentas abrir en ""r"" un archivo que no existe?",,Lo crea vacío,Se para con FileNotFoundError,Devuelve una cadena vacía,Lo busca en internet,B,Para controlarlo y dar un mensaje claro se usa try / except (Bloque B).
+N7-13,7,Errores,¿Qué estructura permite que el programa siga si falta el archivo?,,if / else,for / in,try / except,def / return,C,try intenta algo; except decide qué hacer si sale mal.
+N7-14,7,Seguridad de datos,"En un RAG real, ¿por qué hay que tener cuidado con el modo ""w""?",,Porque es lento,Porque puede borrar en un segundo un índice o registro que costó horas generar,Porque no admite tildes,No hay que tener cuidado,B,"Antes de ejecutar algo que toca un archivo, mira la letra del open."
+N7-15,7,Errores,¿Qué se imprime si secciones.txt NO existe?,"try:
+    with open(""secciones.txt"", ""r"", encoding=""utf-8"") as archivo:
+        n = len(archivo.readlines())
+    print(f""Total: {n}"")
+except FileNotFoundError:
+    print(""No encuentro el archivo"")",Total: 0,Total: 0 y después No encuentro el archivo,Solo: No encuentro el archivo,Un error rojo FileNotFoundError,C,"Al fallar el open, Python salta al except y se salta el resto del try, incluido el print del total."
+N7-16,7,Errores,¿Por qué es un error poner el print del Total DESPUÉS del try/except?,,Porque da un error de sintaxis,Porque se imprimiría 'Total: 0' aunque el archivo no se haya podido leer,Porque el contador se reinicia,No es un error,B,"Un programa que falla no debe decir nada falso: si no sabe cuántas hay, no puede decir 0."
+N7-17,7,Validación,"¿Qué devuelve ""ana|FALLO"".split(""|"")?",,"[""ana"", ""FALLO""]","""ana FALLO""","[""ana|FALLO""]","(""ana"", ""FALLO"")",A,split separa el texto por el carácter indicado y devuelve una lista. campos[0] es el usuario y campos[1] el resultado.
+N7-18,7,Validación,"¿Cuántos elementos tiene ""registro_incompleto"".split(""|"")?",,0,2,1,Da error,C,"Si no hay ningún |, split devuelve una lista con el texto entero. Por eso se comprueba len(campos) != 2."
+N7-19,7,Validación,¿Qué hace continue dentro de un for?,,Termina el bucle por completo,Salta el resto de esta vuelta y pasa a la siguiente,Repite la vuelta actual,Para el programa,B,Sirve para descartar un registro incorrecto y seguir analizando los demás.
+N7-20,7,Validación,"""|FALLO"".split(""|"") tiene 2 elementos. ¿Por qué hay que rechazarlo igualmente?",,Porque FALLO está en mayúsculas,No hay que rechazarlo,Porque tiene demasiados campos,Porque el usuario está vacío,D,Tener el número correcto de campos no basta: hay que validar también el CONTENIDO de cada campo.
+N7-21,7,Validación,"¿Por qué se comprueba resultado not in [""OK"", ""FALLO""] en vez de aceptar cualquier texto?",,Para que el programa vaya más rápido,Porque solo se aceptan los valores conocidos: lista blanca,Porque Python no admite otros textos,Para ahorrar memoria,B,Aceptar solo lo esperado (lista blanca) es más seguro que intentar prohibir todo lo malo.
+N7-22,7,Registros,¿Qué cambia si ahora = datetime.now() se calcula ANTES del bucle en vez de dentro?,,Nada,El programa falla,"Todos los errores quedan con la misma hora, la del inicio",Se guarda la fecha sin la hora,C,"Dentro del bucle, cada error recibe la hora real en que se detectó: más útil para investigar."
+N7-23,7,Seguridad,"Un registro de errores guarda la línea completa: ""ana|miclave123"". ¿Qué problema hay?",,Ninguno,"Puede guardar datos sensibles, como una contraseña escrita por error",El archivo crecerá demasiado,Python no admite números en los logs,B,Los registros también se roban o se comparten. No deben guardar más información de la necesaria.
+N7-24,7,Seguridad,Un usuario acumula 8 fallos de inicio de sesión en un minuto. ¿Qué conclusión es la correcta?,,Es un ataque seguro y hay que denunciarlo,"Es sospechoso (posible fuerza bruta) y merece revisión, pero no lo prueba",No significa nada,El programa tiene un error,B,Un indicio no es una prueba: puede ser alguien que olvidó su contraseña. Se investiga antes de concluir.
+N7-25,7,Seguridad,¿Dónde se pueden practicar técnicas de ataque de forma legal?,,"En la web de cualquier organismo, si no se rompe nada","En la red del trabajo, si es para aprender",Solo en sistemas propios o en laboratorios preparados para ello,En cualquier sitio si no se roban datos,C,Acceder a sistemas ajenos sin permiso es delito aunque la intención sea aprender.
+N7-26,7,Validación,"""  maria|FALLO  "" llega con espacios al principio y al final. ¿Qué pasa si no se limpian?",,"El usuario se guarda como ""  maria"" y no coincide con ""maria""","Nada, Python los ignora",Da error al hacer split,Se borra la línea,A,"Con espacios, ""  maria"" y ""maria"" contarían como usuarios distintos. .strip() antes de validar."

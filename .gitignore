@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Archivos generados al ejecutar ejercicios y el repaso
+nivel-07/ejercicios/*.txt
+repaso/progreso.txt
+
+# Apps Script (clasp)
+.clasprc.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+~$*

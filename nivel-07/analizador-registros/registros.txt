@@ -1,0 +1,14 @@
+ana|FALLO
+ana|OK
+ana|FALLO
+admin|FALLO
+admin|FALLO
+admin|FALLO
+luis|OK
+ana|FALLIDO
+registro_incompleto
+|FALLO
+admin|FALLO|extra
+
+  maria|FALLO
+admin|fallo
