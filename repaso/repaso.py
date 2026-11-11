@@ -131,8 +131,6 @@ def main():
         # -------------------------------------------------------------------
         if acierto:
             aciertos +=1
-        else:
-            print("Respuesa incorrecta")
         guardar_resultado(ARCHIVO_PROGRESO, pregunta["id"], acierto)
 
     print(ANCHO)
